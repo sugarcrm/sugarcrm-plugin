@@ -50,7 +50,15 @@ class Package
      */
     public function getPaths()
     {
-        return $this->config->get('sync');
+        $paths = $this->config->get('sync');
+
+        foreach ($paths as $i => $path) {
+            if (substr($path, -1, 1) === '*') {
+                $paths[$i] = dirname($path);
+            }
+        }
+
+        return $paths;
     }
 
     /**

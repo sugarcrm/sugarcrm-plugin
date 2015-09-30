@@ -241,10 +241,18 @@ PHP;
         foreach ($this->config->get('sync') as $from => $to) {
             if (is_int($from)) {
                 $from = $to;
-                $to = "";
             }
 
-            $this->exec("rsync -r {$this->getRootPath()}/$from {$this->getPackagePath()}/$to");
+            $from = "{$this->getRootPath()}/$from";
+            $toDir = "{$this->getPackagePath()}/$to";
+
+            $toDir = dirname($toDir);
+
+            if (!is_dir($toDir)) {
+                $this->exec("mkdir -p $toDir");
+            }
+
+            $this->exec("rsync -r $from $toDir");
         }
     }
 
