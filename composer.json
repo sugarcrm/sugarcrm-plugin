@@ -1,7 +1,7 @@
 {
     "name": "dri-nordic/sugarcrm-plugin",
-    "type": "project",
-    "license": "proprietary",
+    "type": "library",
+    "license": "MIT",
     "description": "",
     "authors": [
         {
