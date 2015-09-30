@@ -3,7 +3,6 @@
 namespace DRI\SugarCRM\Plugin\Command;
 
 use DRI\SugarCRM\Plugin\Cli;
-use DRI\SugarCRM\Plugin\Config;
 use DRI\SugarCRM\Plugin\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

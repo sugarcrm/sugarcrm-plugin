@@ -8,7 +8,6 @@ use Symfony\Component\Console\Application;
 
 use DRI\SugarCRM\Plugin\Command;
 use DRI\SugarCRM\Plugin\Path;
-use DRI\SugarCRM\Plugin\Cli;
 
 Path::setRootPath(getcwd());
 
