@@ -23,7 +23,7 @@
         "post-update-cmd": []
     },
     "extra": {},
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
             "DRI\\SugarCRM\\Plugin\\": "src/"
         }
