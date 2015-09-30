@@ -26,10 +26,10 @@ class UninstallCommand extends AbstractCommand
     {
         $target = $input->getArgument('target');
 
-        Cli::exec("rm -rf $target/custom");
-        Cli::exec("rm -rf $target/modules/ibm_connections*");
-        Cli::exec("rm -rf $target/tests/custom/clients/base/fields/memberset");
-        Cli::exec("rm -rf $target/tests/custom/clients/base/views/ibm-connections");
-        Cli::exec("rm -rf $target/tests/modules/ibm_connections*");
+        $config = $this->getConfig();
+
+        foreach ($config->get('dev') as $source => $remote) {
+            Cli::exec("rm -rf $target/$remote");
+        }
     }
 }

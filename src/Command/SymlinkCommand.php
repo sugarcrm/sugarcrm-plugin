@@ -3,6 +3,7 @@
 namespace DRI\SugarCRM\Plugin\Command;
 
 use DRI\SugarCRM\Plugin\Cli;
+use DRI\SugarCRM\Plugin\Config;
 use DRI\SugarCRM\Plugin\Path;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,12 +29,14 @@ class SymlinkCommand extends AbstractCommand
         $target = $input->getArgument('target');
         $root = Path::getRootPath();
 
-        clean("src");
+        $config = $this->getConfig();
 
-        Cli::exec("rm -rf $target/custom");
-        Cli::exec("rm -rf $target/modules/ibm_connections*");
+        foreach ($config->get('dev') as $source => $remote) {
+            Cli::exec("rm -rf $target/$source");
+        }
 
-        Cli::exec("ln -fs $root/src/custom $target/custom");
-        Cli::exec("ln -fs $root/src/modules/ibm_connections* $target/modules");
+        foreach ($config->get('dev') as $source => $remote) {
+            Cli::exec("ln -fs $root/$source $target/$remote");
+        }
     }
 }

@@ -63,6 +63,9 @@ class Config implements \ArrayAccess
             'src/custom/modules/Connectors/metadata',
             'src/custom/modules/unified_search_modules_display.php',
         ),
+        'dev' => array (
+            'src/custom' => 'custom',
+        ),
         'globalClean' => array (
             ".DS_Store",
         ),
@@ -71,7 +74,7 @@ class Config implements \ArrayAccess
             'doc/LICENCE.md' => 'LICENCE.md',
         ),
         'sync' => array (
-            'src',
+            'src/custom',
             'actions',
         ),
     );

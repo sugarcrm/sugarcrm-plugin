@@ -20,18 +20,7 @@ $application->addCommands(array (
     new Command\SymlinkCommand(),
     new Command\SyncCommand(),
     new Command\UninstallCommand(),
-    new Command\CreatePackageCommand(),
+    new Command\PackageCommand(),
 ));
 
 $application->run($input);
-
-function clean($src)
-{
-    Cli::exec("rm -rf $src/custom/application");
-    Cli::exec("rm -rf $src/custom/blowfish");
-    Cli::exec("rm -rf $src/custom/history");
-    Cli::exec("rm -rf $src/custom/script");
-    Cli::exec("rm -rf $src/custom/modules/*/Ext");
-    Cli::exec("rm -rf $src/custom/modules/Connectors/metadata");
-    Cli::exec("rm -f $src/custom/modules/unified_search_modules_display.php");
-}

@@ -12,14 +12,14 @@ use DRI\SugarCRM\Plugin\PackageCreator;
 /**
  * @author Emil Kilhage
  */
-class CreatePackageCommand extends AbstractCommand
+class PackageCommand extends AbstractCommand
 {
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        $this->setName('create');
+        $this->setName('package');
 
         $this->addOption(
             'flav',
@@ -45,7 +45,7 @@ class CreatePackageCommand extends AbstractCommand
      */
     protected function setup(InputInterface $input)
     {
-        $config = Config::factory();
+        $config = $this->getConfig();
 
         $flavours = $input->getOption('flav');
 

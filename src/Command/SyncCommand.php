@@ -30,20 +30,20 @@ class SyncCommand extends AbstractCommand
         $target = $input->getArgument('target');
         $root = Path::getRootPath();
 
+        $config = $this->getConfig();
+
         if ($input->getOption('back')) {
-            Cli::exec("rsync -r $target/custom/ $root/src/custom");
-            Cli::exec("rsync -r $target/modules/ibm_connections* $root/src/modules");
-
-            clean("$root/src");
-        } else {
-            clean("$root/src");
-
-            if (is_link("$target/custom")) {
-                Cli::exec("rm $target/custom");
+            foreach ($config->get('dev') as $source => $remote) {
+                Cli::exec("rsync -r $target/$remote $root/$source");
             }
+        } else {
+            foreach ($config->get('dev') as $source => $remote) {
+                if (is_link("$target/$remote")) {
+                    Cli::exec("rm $target/$remote");
+                }
 
-            Cli::exec("rsync -r $root/src/custom/ $target/custom");
-            Cli::exec("rsync -r $root/src/modules/ $target/modules");
+                Cli::exec("rsync -r $root/$source $target/$remote");
+            }
         }
     }
 }
