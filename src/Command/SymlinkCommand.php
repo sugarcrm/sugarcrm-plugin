@@ -4,6 +4,7 @@ namespace DRI\SugarCRM\Plugin\Command;
 
 use DRI\SugarCRM\Plugin\Cli;
 use DRI\SugarCRM\Plugin\Path;
+use DRI\SugarCRM\Plugin\Utils;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,7 +36,14 @@ class SymlinkCommand extends AbstractCommand
         }
 
         foreach ($config->get('dev') as $source => $remote) {
-            Cli::exec("ln -fs $root/$source $target/$remote");
+            $from = "$root/$source";
+            $to = "$target/$remote";
+
+            if (Utils::isWildcardPath($to)) {
+                $to = dirname($to);
+            }
+
+            Cli::exec("ln -fs $from $to");
         }
     }
 }

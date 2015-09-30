@@ -244,15 +244,15 @@ PHP;
             }
 
             $from = "{$this->getRootPath()}/$from";
-            $toDir = "{$this->getPackagePath()}/$to";
+            $to = "{$this->getPackagePath()}/$to";
 
-            $toDir = dirname($toDir);
+            $to = dirname($to);
 
-            if (!is_dir($toDir)) {
-                $this->exec("mkdir -p $toDir");
+            if (!is_dir($to)) {
+                $this->exec("mkdir -p $to");
             }
 
-            $this->exec("rsync -r $from $toDir");
+            $this->exec("rsync -r $from $to");
         }
     }
 

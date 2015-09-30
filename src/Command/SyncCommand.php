@@ -4,6 +4,7 @@ namespace DRI\SugarCRM\Plugin\Command;
 
 use DRI\SugarCRM\Plugin\Cli;
 use DRI\SugarCRM\Plugin\Path;
+use DRI\SugarCRM\Plugin\Utils;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,15 +35,25 @@ class SyncCommand extends AbstractCommand
 
         if ($input->getOption('back')) {
             foreach ($config->get('dev') as $source => $remote) {
-                Cli::exec("rsync -r $target/$remote $root/$source");
+                $to = "$root/$source";
+                $from = "$target/$remote";
+
+                Cli::exec("rsync -r $from $to");
             }
         } else {
             foreach ($config->get('dev') as $source => $remote) {
-                if (is_link("$target/$remote")) {
-                    Cli::exec("rm $target/$remote");
+                $from = "$root/$source";
+                $to = "$target/$remote";
+
+                if (is_link("$to")) {
+                    Cli::exec("rm $to");
                 }
 
-                Cli::exec("rsync -r $root/$source $target/$remote");
+                if (Utils::isWildcardPath($to)) {
+                    $to = dirname($to);
+                }
+
+                Cli::exec("rsync -r $from $to");
             }
         }
     }
