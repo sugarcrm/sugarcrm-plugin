@@ -5,7 +5,7 @@ namespace DRI\SugarCRM\Plugin;
 /**
  * @author Emil Kilhage
  */
-class Utils
+class StringUtils
 {
     /**
      * @param string $path

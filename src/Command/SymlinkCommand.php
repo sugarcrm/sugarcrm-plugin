@@ -4,7 +4,7 @@ namespace DRI\SugarCRM\Plugin\Command;
 
 use DRI\SugarCRM\Plugin\Cli;
 use DRI\SugarCRM\Plugin\Path;
-use DRI\SugarCRM\Plugin\Utils;
+use DRI\SugarCRM\Plugin\StringUtils;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +39,7 @@ class SymlinkCommand extends AbstractCommand
             $from = "$root/$source";
             $to = "$target/$remote";
 
-            if (Utils::isWildcardPath($to)) {
+            if (StringUtils::isWildcardPath($to)) {
                 $to = dirname($to);
             }
 

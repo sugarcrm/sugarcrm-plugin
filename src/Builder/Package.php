@@ -4,7 +4,7 @@ namespace DRI\SugarCRM\Plugin\Builder;
 
 use DRI\SugarCRM\Plugin\Config;
 
-use DRI\SugarCRM\Plugin\Utils;
+use DRI\SugarCRM\Plugin\StringUtils;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -54,7 +54,7 @@ class Package
         $paths = $this->config->get('sync');
 
         foreach ($paths as $i => $path) {
-            if (Utils::isWildcardPath($path)) {
+            if (StringUtils::isWildcardPath($path)) {
                 $paths[$i] = dirname($path);
             }
         }
