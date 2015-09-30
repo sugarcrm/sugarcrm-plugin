@@ -167,14 +167,6 @@ class Config implements \ArrayAccess
     /**
      * @return string
      */
-    public function getSourceManifestFile()
-    {
-        return "{$this->getRootPath()}/manifest.php";
-    }
-
-    /**
-     * @return string
-     */
     public function getPackageManifestFile()
     {
         return "{$this->getPackagePath()}/manifest.php";
@@ -268,6 +260,14 @@ class Config implements \ArrayAccess
     }
 
     /**
+     * @return string[]
+     */
+    public function getCurrentFlavours()
+    {
+        return $this->currentFlavours;
+    }
+
+    /**
      * @param string $name
      *
      * @return bool
@@ -314,7 +314,7 @@ class Config implements \ArrayAccess
      */
     public function isFlavourEnabled($flavour)
     {
-        return in_array($flavour, $this->getAvailableFlavours());
+        return in_array($flavour, $this->getCurrentFlavours());
     }
 
     /**

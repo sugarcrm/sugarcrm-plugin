@@ -182,7 +182,9 @@ class File
     private function write()
     {
         fclose($this->handle());
-        rename($this->getParsedFileName(), $this->file->getRealPath());
+        if (!rename($this->getParsedFileName(), $this->file->getRealPath())) {
+            throw new \Exception('unable to move file');
+        }
     }
 
     /**
