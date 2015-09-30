@@ -57,22 +57,6 @@ class PackageCreator
     }
 
     /**
-     * @return string
-     */
-    private function getSourceManifestFile()
-    {
-        return $this->config->getSourceManifestFile();
-    }
-
-    /**
-     * @return string
-     */
-    private function getPackageManifestFile()
-    {
-        return $this->config->getPackageManifestFile();
-    }
-
-    /**
      *
      */
     public function create()
@@ -142,13 +126,8 @@ class PackageCreator
      */
     private function readManifest()
     {
-        $manifest = null;
-        $installdefs = null;
-
-        require $this->getSourceManifestFile();
-
-        $this->manifest = $manifest;
-        $this->installdefs = $installdefs;
+        $this->manifest = $this->config->get('manifest');
+        $this->installdefs = $this->config->get('installdefs');
     }
 
     /**
@@ -177,18 +156,9 @@ class PackageCreator
     /**
      *
      */
-    private function setManifestName()
-    {
-        $this->manifest['name'] = $this->config->get('name');
-    }
-
-    /**
-     *
-     */
     private function writeManifest()
     {
         $this->setPublishedDate();
-        $this->setManifestName();
 
         $manifestArray = var_export($this->manifest, true);
         $installdefsArray = var_export($this->installdefs, true);
@@ -202,7 +172,7 @@ class PackageCreator
 
 PHP;
 
-        file_put_contents($this->getPackageManifestFile(), $manifest_content);
+        file_put_contents($this->config->getPackageManifestFile(), $manifest_content);
     }
 
     /**

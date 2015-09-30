@@ -3,8 +3,8 @@
 namespace DRI\SugarCRM\Plugin\Builder;
 
 use DRI\SugarCRM\Plugin\Config;
-
 use DRI\SugarCRM\Plugin\StringUtils;
+
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 

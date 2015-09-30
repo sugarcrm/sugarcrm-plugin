@@ -2,11 +2,17 @@
 
 namespace DRI\SugarCRM\Plugin;
 
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+
 /**
  * @author Emil Kilhage
  */
 class Config implements \ArrayAccess
 {
+    /**
+     *
+     */
     const DEFAULT_TYPE = 'full';
 
     /**
@@ -50,8 +56,34 @@ class Config implements \ArrayAccess
     protected $config = array (
         'class' => null,
         'prefix' => null,
-        'name' => null,
         'suffix' => '',
+        'manifest' => array (
+            'readme' => '',
+            'key' => '',
+            'description' => '',
+            'icon' => '',
+            'is_uninstallable' => true,
+            'name' => null,
+            'published_date' => null,
+            'type' => 'module',
+            'version' => null,
+            'remove_tables' => 'prompt',
+        ),
+        'installdefs' => array (
+            'id' => '',
+            'post_execute' => array (
+                '<basepath>/actions/post_install_actions.php',
+            ),
+            'post_uninstall' => array (
+                '<basepath>/actions/post_uninstall_actions.php',
+            ),
+            'copy' => array (
+                array (
+                    'from' => '<basepath>/src/custom',
+                    'to' => 'custom',
+                ),
+            ),
+        ),
         'clean' => array (
             'src/custom/application',
             'src/custom/blowfish',
@@ -68,6 +100,8 @@ class Config implements \ArrayAccess
         ),
         'globalClean' => array (
             ".DS_Store",
+            ".gitkeep",
+            ".git",
         ),
         'copy' => array (
             'doc/README.md' => 'README.md',
@@ -98,6 +132,14 @@ class Config implements \ArrayAccess
     }
 
     /**
+     * Config constructor.
+     */
+    public function __construct()
+    {
+        $this->scanModules();
+    }
+
+    /**
      * @return string
      */
     public function getRootPath()
@@ -111,6 +153,14 @@ class Config implements \ArrayAccess
     public function getPackagePath()
     {
         return "{$this->getRootPath()}/package";
+    }
+
+    /**
+     * @return string
+     */
+    public function getSrcPath()
+    {
+        return "{$this->getRootPath()}/src";
     }
 
     /**
@@ -130,6 +180,31 @@ class Config implements \ArrayAccess
     }
 
     /**
+     *
+     */
+    private function scanModules()
+    {
+        $finder = new Finder();
+        $finder->directories()
+            ->in("{$this->getSrcPath()}/modules")
+            ->depth(0);
+
+        foreach ($finder as $file) {
+            /** @var SplFileInfo $file */
+            $path = "src/modules/{$file->getRelativePathname()}";
+            $this->config['sync'][] = $path;
+            $this->config['dev'][$path] = "modules/{$file->getRelativePathname()}";
+        }
+
+        if ($finder->count() > 0) {
+            $this->config['installdefs']['copy'][] = array (
+                'from' => '<basepath>/src/modules',
+                'to' => 'modules',
+            );
+        }
+    }
+
+    /**
      * @param string $name
      * @param null|string $default
      *
@@ -144,8 +219,6 @@ class Config implements \ArrayAccess
         if (isset($default)) {
             return $default;
         }
-
-        print_r($this->config);
 
         throw new \InvalidArgumentException('missing config parameter: '.$name);
     }
