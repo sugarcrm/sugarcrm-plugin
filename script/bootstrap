@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Install all dependencies trough composer
+composer install

@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+require_once "vendor/autoload.php";
+
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Application;
+
+use DRI\SugarCRM\Plugin\Command;
+use DRI\SugarCRM\Plugin\Path;
+use DRI\SugarCRM\Plugin\Cli;
+
+Path::setRootPath(getcwd());
+
+$input = new ArgvInput($argv);
+
+$application = new Application();
+
+$application->addCommands(array (
+    new Command\SymlinkCommand(),
+    new Command\SyncCommand(),
+    new Command\UninstallCommand(),
+    new Command\CreatePackageCommand(),
+));
+
+$application->run($input);
+
+function clean($src)
+{
+    Cli::exec("rm -rf $src/custom/application");
+    Cli::exec("rm -rf $src/custom/blowfish");
+    Cli::exec("rm -rf $src/custom/history");
+    Cli::exec("rm -rf $src/custom/script");
+    Cli::exec("rm -rf $src/custom/modules/*/Ext");
+    Cli::exec("rm -rf $src/custom/modules/Connectors/metadata");
+    Cli::exec("rm -f $src/custom/modules/unified_search_modules_display.php");
+}
