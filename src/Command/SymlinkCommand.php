@@ -32,7 +32,7 @@ class SymlinkCommand extends AbstractCommand
         $config = $this->getConfig();
 
         foreach ($config->get('dev') as $source => $remote) {
-            Cli::exec("rm -rf $target/$source");
+            Cli::exec("rm -rf $target/$remote");
         }
 
         foreach ($config->get('dev') as $source => $remote) {

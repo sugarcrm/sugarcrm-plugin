@@ -38,6 +38,8 @@ class SyncCommand extends AbstractCommand
                 $to = "$root/$source";
                 $from = "$target/$remote";
 
+                $to = dirname($to);
+
                 Cli::exec("rsync -r $from $to");
             }
         } else {
@@ -49,9 +51,7 @@ class SyncCommand extends AbstractCommand
                     Cli::exec("rm $to");
                 }
 
-                if (Utils::isWildcardPath($to)) {
-                    $to = dirname($to);
-                }
+                $to = dirname($to);
 
                 Cli::exec("rsync -r $from $to");
             }
