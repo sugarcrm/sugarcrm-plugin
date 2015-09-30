@@ -83,6 +83,7 @@ class Config implements \ArrayAccess
                     'to' => 'custom',
                 ),
             ),
+            'beans'=> array (),
         ),
         'clean' => array (
             'src/custom/application',
@@ -200,6 +201,41 @@ class Config implements \ArrayAccess
             $this->config['installdefs']['copy'][] = array (
                 'from' => '<basepath>/src/modules',
                 'to' => 'modules',
+            );
+
+            $this->scanBeans();
+        }
+    }
+
+    /**
+     *
+     */
+    private function scanBeans()
+    {
+        $finder = new Finder();
+        $finder->files()
+            ->in("{$this->getSrcPath()}/custom/Extension/application/Ext/Include")
+            ->name('/\.php/');
+
+        foreach ($finder as $file) {
+            $this->scanBeanFile($file);
+        }
+    }
+
+    /**
+     * @param SplFileInfo $file
+     */
+    private function scanBeanFile(SplFileInfo $file)
+    {
+        require $file->getRealPath();
+
+        foreach ($beanList as $moduleName => $beanName) {
+            $beanFile = $beanFiles[$moduleName];
+            $this->config['installdefs']['beans'][] = array (
+                'module' => $moduleName,
+                'class' => $beanName,
+                'path' => $beanFile,
+                'tab' => false,
             );
         }
     }
