@@ -43,7 +43,7 @@ class PackageCreator
     /**
      * @return string
      */
-    public function getRootPath()
+    private function getRootPath()
     {
         return Path::getRootPath();
     }
@@ -51,7 +51,7 @@ class PackageCreator
     /**
      * @return string
      */
-    public function getPackagePath()
+    private function getPackagePath()
     {
         return $this->config->getPackagePath();
     }
@@ -59,7 +59,7 @@ class PackageCreator
     /**
      * @return string
      */
-    public function getSourceManifestFile()
+    private function getSourceManifestFile()
     {
         return $this->config->getSourceManifestFile();
     }
@@ -67,7 +67,7 @@ class PackageCreator
     /**
      * @return string
      */
-    public function getPackageManifestFile()
+    private function getPackageManifestFile()
     {
         return $this->config->getPackageManifestFile();
     }
@@ -89,14 +89,23 @@ class PackageCreator
         $this->clean();
 
         $this->buildFiles();
+        $this->cleanEmptyDirs();
 
         $this->createZipFile();
     }
 
     /**
+     *
+     */
+    private function cleanEmptyDirs()
+    {
+        $this->exec("find {$this->getPackagePath()} -type d -empty -delete");
+    }
+
+    /**
      * @return string
      */
-    public function getZipFileName()
+    private function getZipFileName()
     {
         $suffix = $this->config->get('suffix', '');
 
