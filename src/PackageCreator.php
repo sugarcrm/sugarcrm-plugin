@@ -3,6 +3,8 @@
 namespace DRI\SugarCRM\Plugin;
 
 use DRI\SugarCRM\Plugin\Builder\Package;
+use DRI\SugarCRM\Plugin\Exception\InvalidConfigException;
+use DRI\SugarCRM\Plugin\Exception\PackageVersionAlreadyExistException;
 
 /**
  * @author Emil Kilhage
@@ -35,6 +37,8 @@ class PackageCreator
      */
     public function create()
     {
+        $this->checkExistingPackageExist();
+
         $this->setupPackageDir();
 
         $this->writeManifest();
@@ -48,6 +52,37 @@ class PackageCreator
         $this->cleanEmptyDirs();
 
         $this->createZipFile();
+    }
+
+    /**
+     * @throws PackageVersionAlreadyExistException
+     */
+    private function checkExistingPackageExist()
+    {
+        $fileName = $this->getZipFileName();
+        $packages = $this->config->getPackagesPath();
+        $path = "$packages/$fileName";
+
+        if (file_exists($path)) {
+            $message = <<<TXT
+###########################################################################
+# The current version of your package has already been generated.
+#
+# Please update the version in config.php
+#
+#    'manifest' => array (
+#        ...
+#        'type' => 'module',
+#        'version' => '0.1.0', <<--- update this guy
+#        'remove_tables' => 'prompt',
+#    ),
+#
+# If you are not sure which number to increase, check README.md
+###########################################################################
+TXT;
+
+            throw new PackageVersionAlreadyExistException($message);
+        }
     }
 
     /**
@@ -122,15 +157,15 @@ class PackageCreator
     private function validateManifest()
     {
         if ($this->config->isEmpty('prefix')) {
-            throw new \InvalidArgumentException('missing prefix in config');
+            throw new InvalidConfigException('missing prefix in config.php');
         }
 
         if ($this->config->get('prefix') === 'dri_plugin_template') {
-            throw new \InvalidArgumentException('Please change prefix to a unique name for your plugin');
+            throw new InvalidConfigException('Please change prefix to a unique name for your plugin in config.php');
         }
 
         if ($this->config->get('manifest.name') === 'DRI Plugin Template') {
-            throw new \InvalidArgumentException('Please change manifest.name to a unique name for your plugin');
+            throw new InvalidConfigException('Please change manifest.name to a unique name for your plugin in config.php');
         }
     }
 
@@ -199,10 +234,6 @@ PHP;
         chdir($package);
 
         $zipFile = $this->getZipFileName();
-
-        if (file_exists($zipFile)) {
-            unlink($zipFile);
-        }
 
         $this->exec("zip -r $zipFile *");
 
