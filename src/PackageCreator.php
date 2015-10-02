@@ -59,12 +59,13 @@ class PackageCreator
      */
     private function checkExistingPackageExist()
     {
-        $fileName = $this->getZipFileName();
-        $packages = $this->config->getPackagesPath();
-        $path = "$packages/$fileName";
-
-        if (file_exists($path)) {
-            $message = <<<TXT
+        if ($this->config->get('force', false)) {
+            if (file_exists($this->getTargetZipPath())) {
+                unlink($this->getTargetZipPath());
+            }
+        } else {
+            if (file_exists($this->getTargetZipPath())) {
+                $message = <<<TXT
 ###########################################################################
 # The current version of your package has already been generated.
 #
@@ -81,8 +82,10 @@ class PackageCreator
 ###########################################################################
 TXT;
 
-            throw new PackageVersionAlreadyExistException($message);
+                throw new PackageVersionAlreadyExistException($message);
+            }
         }
+
     }
 
     /**
@@ -242,6 +245,14 @@ PHP;
         }
 
         $this->exec("mv $zipFile $packages/");
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetZipPath()
+    {
+        return "{$this->config->getPackagesPath()}/{$this->getZipFileName()}";
     }
 
     /**
