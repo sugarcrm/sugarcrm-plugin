@@ -2,6 +2,7 @@
 
 namespace DRI\SugarCRM\Plugin;
 
+use Dflydev\DotAccessData\Data;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -105,8 +106,8 @@ class Config implements \ArrayAccess
             ".git",
         ),
         'copy' => array (
-            'doc/README.md' => 'README.md',
-            'doc/LICENCE.md' => 'LICENCE.md',
+            'doc/README' => 'README',
+            'doc/LICENCE' => 'LICENCE',
         ),
         'sync' => array (
             'src/custom',
@@ -154,6 +155,14 @@ class Config implements \ArrayAccess
     public function getPackagePath()
     {
         return "{$this->getRootPath()}/package";
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackagesPath()
+    {
+        return "{$this->getRootPath()}/packages";
     }
 
     /**
@@ -219,6 +228,9 @@ class Config implements \ArrayAccess
      */
     private function scanBeanFile(SplFileInfo $file)
     {
+        $beanList = array ();
+        $beanFiles = array ();
+
         require $file->getRealPath();
 
         foreach ($beanList as $moduleName => $beanName) {
@@ -240,7 +252,14 @@ class Config implements \ArrayAccess
      */
     public function get($name, $default = null)
     {
-        if (isset($this->config[$name])) {
+        if (strpos($name, '.') !== false) {
+            $data = new Data($this->config);
+            $value = $data->get($name);
+
+            if (isset($value)) {
+                return $value;
+            }
+        } else if (isset($this->config[$name])) {
             return $this->config[$name];
         }
 
@@ -274,7 +293,39 @@ class Config implements \ArrayAccess
      */
     public function has($name)
     {
-        return isset($this->config[$name]);
+        if (strpos($name, '.') !== false) {
+            $data = new Data($this->config);
+            $value = $data->get($name);
+            return $value !== false;
+        } else if (isset($this->config[$name])) {
+            return isset($this->config[$name]);
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isEmpty($name)
+    {
+        $value = $this->get($name);
+        return empty($value);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    public function set($name, $value)
+    {
+        if (strpos($name, '.') !== false) {
+            $data = new Data($this->config);
+            $data->set($name, $value);
+            $this->config = $data->export();
+        } else {
+            $this->config[$name] = $value;
+        }
     }
 
     /**
@@ -351,6 +402,7 @@ class Config implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
+        $this->set($offset, $value);
     }
 
     /**

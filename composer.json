@@ -12,7 +12,8 @@
     "require-dev": {},
     "require": {
         "symfony/console": "~2.4",
-        "symfony/finder": "~2.7"
+        "symfony/finder": "~2.7",
+        "dflydev/dot-access-data": "~1.0"
     },
     "bin": [
         "bin/plugin"

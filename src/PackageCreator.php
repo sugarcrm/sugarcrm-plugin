@@ -10,16 +10,6 @@ use DRI\SugarCRM\Plugin\Builder\Package;
 class PackageCreator
 {
     /**
-     * @var array
-     */
-    private $manifest;
-
-    /**
-     * @var array
-     */
-    private $installdefs;
-
-    /**
      * @var Config
      */
     private $config;
@@ -41,28 +31,10 @@ class PackageCreator
     }
 
     /**
-     * @return string
-     */
-    private function getRootPath()
-    {
-        return Path::getRootPath();
-    }
-
-    /**
-     * @return string
-     */
-    private function getPackagePath()
-    {
-        return $this->config->getPackagePath();
-    }
-
-    /**
      *
      */
     public function create()
     {
-        $this->readManifest();
-
         $this->setupPackageDir();
 
         $this->writeManifest();
@@ -83,7 +55,7 @@ class PackageCreator
      */
     private function cleanEmptyDirs()
     {
-        $this->exec("find {$this->getPackagePath()} -type d -empty -delete");
+        $this->exec("find {$this->config->getPackagePath()} -type d -empty -delete");
     }
 
     /**
@@ -100,7 +72,7 @@ class PackageCreator
         return sprintf(
             "%s.%s%s.zip",
             $this->config->get('prefix'),
-            $this->manifest['version'],
+            $this->config->get('manifest.version'),
             $suffix
         );
     }
@@ -124,18 +96,9 @@ class PackageCreator
     /**
      *
      */
-    private function readManifest()
-    {
-        $this->manifest = $this->config->get('manifest');
-        $this->installdefs = $this->config->get('installdefs');
-    }
-
-    /**
-     *
-     */
     private function setupPackageDir()
     {
-        $package = $this->getPackagePath();
+        $package = $this->config->getPackagePath();
 
         if (is_dir($package)) {
             $this->exec("rm -rf $package");
@@ -150,7 +113,39 @@ class PackageCreator
     private function setPublishedDate()
     {
         $now = new \DateTime();
-        $this->manifest['published_date'] = $now->format("Y-m-d H:i:s");
+        $this->config->set('published_date', $now->format("Y-m-d H:i:s"));
+    }
+
+    /**
+     *
+     */
+    private function validateManifest()
+    {
+        if ($this->config->isEmpty('prefix')) {
+            throw new \InvalidArgumentException('missing prefix in config');
+        }
+
+        if ($this->config->get('prefix') === 'dri_plugin_template') {
+            throw new \InvalidArgumentException('Please change prefix to a unique name for your plugin');
+        }
+
+        if ($this->config->get('manifest.name') === 'DRI Plugin Template') {
+            throw new \InvalidArgumentException('Please change manifest.name to a unique name for your plugin');
+        }
+    }
+
+    /**
+     *
+     */
+    private function fillManifest()
+    {
+        if ($this->config->isEmpty('manifest.key')) {
+            $this->config->set('manifest.key', $this->config->get('prefix'));
+        }
+
+        if ($this->config->isEmpty('installdefs.id')) {
+            $this->config->set('installdefs.id', $this->config->get('prefix'));
+        }
     }
 
     /**
@@ -159,9 +154,11 @@ class PackageCreator
     private function writeManifest()
     {
         $this->setPublishedDate();
+        $this->validateManifest();
+        $this->fillManifest();
 
-        $manifestArray = var_export($this->manifest, true);
-        $installdefsArray = var_export($this->installdefs, true);
+        $manifestArray = var_export($this->config->get('manifest'), true);
+        $installdefsArray = var_export($this->config->get('installdefs'), true);
 
         $manifest_content = <<<PHP
 <?php
@@ -180,7 +177,7 @@ PHP;
      */
     private function clean()
     {
-        $package = $this->getPackagePath();
+        $package = $this->config->getPackagePath();
 
         foreach ($this->config->get('globalClean') as $file) {
             $this->exec("find $package -name \"$file\" -exec rm '{}' \\;");
@@ -196,8 +193,8 @@ PHP;
      */
     private function createZipFile()
     {
-        $root = $this->getRootPath();
-        $package = $this->getPackagePath();
+        $package = $this->config->getPackagePath();
+        $packages = $this->config->getPackagesPath();
 
         chdir($package);
 
@@ -209,7 +206,11 @@ PHP;
 
         $this->exec("zip -r $zipFile *");
 
-        $this->exec("mv $zipFile $root/");
+        if (!is_dir($packages)) {
+            $this->exec("mkdir -p $packages");
+        }
+
+        $this->exec("mv $zipFile $packages/");
     }
 
     /**
@@ -222,8 +223,8 @@ PHP;
                 $from = $to;
             }
 
-            $from = "{$this->getRootPath()}/$from";
-            $to = "{$this->getPackagePath()}/$to";
+            $from = "{$this->config->getRootPath()}/$from";
+            $to = "{$this->config->getPackagePath()}/$to";
 
             $to = dirname($to);
 
@@ -245,8 +246,8 @@ PHP;
                 $from = $to;
             }
 
-            $from = "{$this->getRootPath()}/$from";
-            $to = "{$this->getPackagePath()}/$to";
+            $from = "{$this->config->getRootPath()}/$from";
+            $to = "{$this->config->getPackagePath()}/$to";
 
             $toDir = dirname($to);
 
