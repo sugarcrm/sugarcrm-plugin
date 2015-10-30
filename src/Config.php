@@ -106,8 +106,8 @@ class Config implements \ArrayAccess
             ".git",
         ),
         'copy' => array (
-            'doc/README' => 'README',
-            'doc/LICENCE' => 'LICENCE',
+            'doc/README.txt' => 'README.txt',
+            'doc/LICENCE.txt' => 'LICENCE.txt',
         ),
         'sync' => array (
             'src/custom',
