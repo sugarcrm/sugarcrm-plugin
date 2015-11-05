@@ -43,22 +43,4 @@ class PackageCommand extends AbstractCommand
 
         $output->writeln("<info>Your new package has been created here: {$packageCreator->getTargetZipPath()}</info>");
     }
-
-    /**
-     * @param InputInterface $input
-     *
-     * @return Config
-     */
-    protected function setup(InputInterface $input)
-    {
-        $config = $this->getConfig();
-
-        $flavours = $input->getOption('flav');
-
-        foreach ($flavours as $flavour) {
-            $config->mergeFlavour($flavour);
-        }
-
-        return $config;
-    }
 }
