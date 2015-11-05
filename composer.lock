@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e352ed4750ccbdead41a6915b9d1a24a",
-    "content-hash": "9b2adf287ab168516ce610160766603a",
+    "hash": "51b8728c3b9b81c10a410904cafd238f",
+    "content-hash": "3a09100fbf17453194c7df21e3729de1",
     "packages": [
         {
             "name": "dflydev/dot-access-data",

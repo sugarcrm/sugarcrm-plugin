@@ -31,14 +31,16 @@ class ActionCommand extends AbstractCommand
         $config = $this->getConfig();
         $root = Path::getRootPath();
 
-        $script = $config->get('installdefs.'.$input->getArgument('name'));
+        $scripts = $config->get('installdefs.'.$input->getArgument('name'));
 
-        $script = str_replace('<basepath>', $root, $script);
+        $scripts = str_replace('<basepath>', $root, $scripts);
 
         chdir($input->getArgument('target'));
 
         Bootstrap::bootSugar();
 
-        var_dump($script);
+        foreach ($scripts as $script) {
+            require $script;
+        }
     }
 }
