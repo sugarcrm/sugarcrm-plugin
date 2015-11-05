@@ -20,6 +20,7 @@ $application->addCommands(array (
     new Command\SyncCommand(),
     new Command\UninstallCommand(),
     new Command\PackageCommand(),
+    new Command\ActionCommand(),
 ));
 
 $application->run($input);

@@ -13,12 +13,19 @@
     "require": {
         "symfony/console": "~2.4",
         "symfony/finder": "~2.7",
-        "dflydev/dot-access-data": "~1.0"
+        "dflydev/dot-access-data": "~1.0",
+        "dri-nordic/sugarcrm-framework": "~0.4",
+        "dri-nordic/sugarcrm-database": "~0.1"
     },
     "bin": [
         "bin/plugin"
     ],
-    "repositories": [],
+    "repositories": [
+        {
+            "type": "composer",
+            "url":  "https://packages.dricrm.com/"
+        }
+    ],
     "scripts": {
         "post-install-cmd": [],
         "post-update-cmd": []
