@@ -165,14 +165,16 @@ class File
      */
     private function remove()
     {
+        $parsedFileName = $this->getParsedFileName();
+
         unlink($this->file->getRealPath());
 
         if (is_resource($this->handle)) {
             fclose($this->handle());
         }
 
-        if (file_exists($this->getParsedFileName())) {
-            unlink($this->getParsedFileName());
+        if (file_exists($parsedFileName)) {
+            unlink($parsedFileName);
         }
     }
 
