@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "efd7abcaff3b6673dc6d01a553fd5988",
+    "hash": "51b8728c3b9b81c10a410904cafd238f",
+    "content-hash": "3a09100fbf17453194c7df21e3729de1",
     "packages": [
         {
             "name": "dflydev/dot-access-data",
@@ -61,17 +62,64 @@
             "time": "2015-08-13 03:51:18"
         },
         {
+            "name": "dri-nordic/sugarcrm-database",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.dri-nordic.com:dri-nordic/sugarcrm-database.git",
+                "reference": "5f185bd71a6e6c93cc4c801be9123ce910a103fc"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DRI\\SugarCRM\\Component\\Database\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Emil Kilhage",
+                    "email": "emil.kilhage@dri-nordic.com"
+                }
+            ],
+            "time": "2015-04-29 09:44:35"
+        },
+        {
+            "name": "dri-nordic/sugarcrm-framework",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.dri-nordic.com:dri-nordic/sugarcrm-framework.git",
+                "reference": "63c6fba6a24a710f4a6395f02002b590e12b13e7"
+            },
+            "require": {
+                "dri-nordic/sugarcrm-database": ">=0.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DRI\\SugarCRM\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Emil Kilhage",
+                    "email": "emil.kilhage@dri-nordic.com"
+                }
+            ],
+            "time": "2015-10-06 12:44:59"
+        },
+        {
             "name": "symfony/console",
-            "version": "v2.7.5",
+            "version": "v2.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161"
+                "reference": "5efd632294c8320ea52492db22292ff853a43766"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/06cb17c013a82f94a3d840682b49425cd00a2161",
-                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161",
+                "url": "https://api.github.com/repos/symfony/console/zipball/5efd632294c8320ea52492db22292ff853a43766",
+                "reference": "5efd632294c8320ea52492db22292ff853a43766",
                 "shasum": ""
             },
             "require": {
@@ -80,7 +128,6 @@
             "require-dev": {
                 "psr/log": "~1.0",
                 "symfony/event-dispatcher": "~2.1",
-                "symfony/phpunit-bridge": "~2.7",
                 "symfony/process": "~2.1"
             },
             "suggest": {
@@ -115,27 +162,24 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2015-09-25 08:32:23"
+            "time": "2015-10-20 14:38:46"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.7.5",
+            "version": "v2.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "8262ab605973afbb3ef74b945daabf086f58366f"
+                "reference": "2ffb4e9598db3c48eb6d0ae73b04bbf09280c59d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/8262ab605973afbb3ef74b945daabf086f58366f",
-                "reference": "8262ab605973afbb3ef74b945daabf086f58366f",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/2ffb4e9598db3c48eb6d0ae73b04bbf09280c59d",
+                "reference": "2ffb4e9598db3c48eb6d0ae73b04bbf09280c59d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7"
             },
             "type": "library",
             "extra": {
@@ -164,7 +208,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2015-09-19 19:59:23"
+            "time": "2015-10-11 09:39:48"
         }
     ],
     "packages-dev": [],

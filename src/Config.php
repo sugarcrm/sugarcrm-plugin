@@ -234,7 +234,7 @@ class Config implements \ArrayAccess
         require $file->getRealPath();
 
         foreach ($beanList as $moduleName => $beanName) {
-            $beanFile = $beanFiles[$moduleName];
+            $beanFile = $beanFiles[$beanName];
             $this->config['installdefs']['beans'][] = array (
                 'module' => $moduleName,
                 'class' => $beanName,

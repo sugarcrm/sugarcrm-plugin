@@ -37,6 +37,15 @@ class PackageCreator
      */
     public function create()
     {
+        $this->package();
+        $this->createZipFile();
+    }
+
+    /**
+     *
+     */
+    public function package()
+    {
         $this->checkExistingPackageExist();
 
         $this->setupPackageDir();
@@ -50,8 +59,6 @@ class PackageCreator
 
         $this->buildFiles();
         $this->cleanEmptyDirs();
-
-        $this->createZipFile();
     }
 
     /**
@@ -63,7 +70,7 @@ class PackageCreator
             if (file_exists($this->getTargetZipPath())) {
                 unlink($this->getTargetZipPath());
             }
-        } else {
+        } elseif (!$this->config->get('overwrite', false)) {
             if (file_exists($this->getTargetZipPath())) {
                 $message = <<<TXT
 ###########################################################################
