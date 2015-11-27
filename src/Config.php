@@ -251,12 +251,14 @@ class Config implements \ArrayAccess
                     'module' => $moduleName,
                     'class' => $beanName,
                     'path' => $beanFile,
+                    'tab' => true,
                 ), $base);
             } else {
                 $this->config['installdefs']['beans'][] = array (
                     'module' => $moduleName,
                     'class' => $beanName,
                     'path' => $beanFile,
+                    'tab' => true,
                 );
             }
         }
