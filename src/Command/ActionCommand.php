@@ -38,6 +38,7 @@ class ActionCommand extends AbstractCommand
         chdir($input->getArgument('target'));
 
         Bootstrap::bootSugar();
+        Bootstrap::initAdminUser();
 
         foreach ($scripts as $script) {
             require $script;
