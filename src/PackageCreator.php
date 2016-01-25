@@ -158,7 +158,7 @@ TXT;
     private function setPublishedDate()
     {
         $now = new \DateTime();
-        $this->config->set('published_date', $now->format("Y-m-d H:i:s"));
+        $this->config->set('manifest.published_date', $now->format("Y-m-d H:i:s"));
     }
 
     /**
