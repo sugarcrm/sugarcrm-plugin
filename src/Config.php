@@ -235,12 +235,32 @@ class Config implements \ArrayAccess
 
         foreach ($beanList as $moduleName => $beanName) {
             $beanFile = $beanFiles[$beanName];
-            $this->config['installdefs']['beans'][] = array (
-                'module' => $moduleName,
-                'class' => $beanName,
-                'path' => $beanFile,
-                'tab' => false,
-            );
+
+            $index = null;
+            $base = null;
+
+            foreach ($this->config['installdefs']['beans'] as $index => $def) {
+                if (isset($def['module']) && $def['module'] === $moduleName) {
+                    $base = $def;
+                    break;
+                }
+            }
+
+            if (null !== $base) {
+                $this->config['installdefs']['beans'][$index] = array_merge(array (
+                    'module' => $moduleName,
+                    'class' => $beanName,
+                    'path' => $beanFile,
+                    'tab' => true,
+                ), $base);
+            } else {
+                $this->config['installdefs']['beans'][] = array (
+                    'module' => $moduleName,
+                    'class' => $beanName,
+                    'path' => $beanFile,
+                    'tab' => true,
+                );
+            }
         }
     }
 

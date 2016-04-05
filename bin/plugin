@@ -24,4 +24,9 @@ $application->addCommands(array (
     new Command\ScanCommand(),
 ));
 
+if (file_exists('commands.php')) {
+    $commands = require 'commands.php';
+    $application->addCommands($commands);
+}
+
 $application->run($input);
