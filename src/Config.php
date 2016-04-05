@@ -107,7 +107,7 @@ class Config implements \ArrayAccess
         ),
         'copy' => array (
             'doc/README.txt' => 'README.txt',
-            'doc/LICENCE.txt' => 'LICENCE.txt',
+            'doc/LICENSE.txt' => 'LICENSE.txt',
         ),
         'sync' => array (
             'src/custom',
