@@ -5,6 +5,7 @@ namespace DRI\SugarCRM\Plugin;
 use DRI\SugarCRM\Plugin\Builder\Package;
 use DRI\SugarCRM\Plugin\Exception\InvalidConfigException;
 use DRI\SugarCRM\Plugin\Exception\PackageVersionAlreadyExistException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @author Emil Kilhage
@@ -50,8 +51,6 @@ class PackageCreator
 
         $this->setupPackageDir();
 
-        $this->writeManifest();
-
         $this->syncFiles();
         $this->copyFiles();
 
@@ -59,6 +58,8 @@ class PackageCreator
 
         $this->buildFiles();
         $this->cleanEmptyDirs();
+
+        $this->writeManifest();
     }
 
     /**
@@ -72,6 +73,7 @@ class PackageCreator
             }
         } elseif (!$this->config->get('overwrite', false)) {
             if (file_exists($this->getTargetZipPath())) {
+                $version = $this->config->get('manifest.version');
                 $message = <<<TXT
 ###########################################################################
 # The current version of your package has already been generated.
@@ -81,7 +83,7 @@ class PackageCreator
 #    'manifest' => array (
 #        ...
 #        'type' => 'module',
-#        'version' => '0.1.0', <<--- update this guy
+#        'version' => '{$version}', \<<--- update this guy
 #        'remove_tables' => 'prompt',
 #    ),
 #
@@ -111,15 +113,23 @@ TXT;
         $suffix = $this->config->get('suffix', '');
 
         if (!empty($suffix)) {
-            $suffix = ".$suffix";
+            $suffix = "-$suffix";
         }
 
-        return sprintf(
-            "%s.%s%s.zip",
-            $this->config->get('prefix'),
-            $this->config->get('manifest.version'),
-            $suffix
-        );
+        if (false === strpos($this->config->get('prefix'), $this->config->get('manifest.version'))) {
+            return sprintf(
+                "%s-%s%s.zip",
+                $this->config->get('prefix'),
+                $this->config->get('manifest.version'),
+                $suffix
+            );
+        } else {
+            return sprintf(
+                "%s%s.zip",
+                $this->config->get('prefix'),
+                $suffix
+            );
+        }
     }
 
     /**
@@ -196,11 +206,43 @@ TXT;
     /**
      *
      */
+    private function buildCopy()
+    {
+        $build = array ();
+        $copy = $this->config->get('installdefs.copy');
+
+        foreach ($copy as $def) {
+            $path = str_replace('<basepath>', $this->config->getPackagePath(), $def['from']);
+
+            if (is_dir($path)) {
+                $finder = new Finder();
+                $finder->files()->in($path);
+
+                foreach ($finder as $file) {
+                    $build[] = array (
+                        'from' => $def['from'].'/'.$file->getRelativePathname(),
+                        'to' => $def['to'].'/'.$file->getRelativePathname(),
+                    );
+                }
+            } elseif (is_file($path)) {
+                $build[] = $def;
+            } else {
+                throw new \InvalidArgumentException('');
+            }
+        }
+
+        $this->config->set('installdefs.copy', $build);
+    }
+
+    /**
+     *
+     */
     private function writeManifest()
     {
         $this->setPublishedDate();
         $this->validateManifest();
         $this->fillManifest();
+        $this->buildCopy();
 
         $manifestArray = var_export($this->config->get('manifest'), true);
         $installdefsArray = var_export($this->config->get('installdefs'), true);
