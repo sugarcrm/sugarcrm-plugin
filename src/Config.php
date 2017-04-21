@@ -186,6 +186,10 @@ class Config implements \ArrayAccess
      */
     private function scanModules()
     {
+        if (!is_dir("{$this->getSrcPath()}/modules")) {
+            return;
+        }
+
         $finder = new Finder();
         $finder->directories()
             ->in("{$this->getSrcPath()}/modules")
