@@ -23,6 +23,11 @@ class PackageCreator
     private $builder;
 
     /**
+     * @var Hooks
+     */
+    private $hooks;
+
+    /**
      * PackageCreator constructor.
      *
      * @param Config $config
@@ -31,6 +36,7 @@ class PackageCreator
     {
         $this->config = $config;
         $this->builder = new Package($this->config);
+        $this->hooks = new Hooks($this->config);
     }
 
     /**
@@ -145,7 +151,9 @@ TXT;
      */
     private function buildFiles()
     {
+        $this->hooks->preBuild();
         $this->builder->build();
+        $this->hooks->postBuild();
     }
 
     /**
