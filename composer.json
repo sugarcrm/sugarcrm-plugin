@@ -1,12 +1,12 @@
 {
-    "name": "dri-nordic/sugarcrm-plugin",
+    "name": "addoptify/sugarcrm-plugin",
     "type": "library",
     "license": "MIT",
     "description": "",
     "authors": [
         {
             "name": "Emil Kilhage",
-            "email": "emil.kilhage@dri-nordic.com"
+            "email": "emilkilhage@gmail.com"
         }
     ],
     "require-dev": {},
@@ -14,16 +14,10 @@
         "symfony/console": "~2.4",
         "symfony/finder": "~2.7",
         "dflydev/dot-access-data": "~1.0",
-        "dri-nordic/sugarcrm-framework": "~0.4"
+        "addoptify/sugarcrm-framework": "~0.4"
     },
     "bin": [
         "bin/plugin"
-    ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url":  "https://packages.dricrm.com/"
-        }
     ],
     "scripts": {
         "post-install-cmd": [],
