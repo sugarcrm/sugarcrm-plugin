@@ -56,6 +56,7 @@ class ScanCommand extends AbstractCommand
         if ($scanner->hasIssues()) {
             $output->writeln('<error>Errors found in package:</error>');
             print_r($scanner->getIssues());
+            return 1;
         } else {
             $output->writeln('<info>Package is clean</info>');
         }
