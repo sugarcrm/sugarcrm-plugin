@@ -224,7 +224,8 @@ TXT;
 
             if (is_dir($path)) {
                 $finder = new Finder();
-                $finder->files()->in($path);
+                $finder->files()->in($path)
+                    ->name('/\.php|js|less|yml|css|hbs|html$/');
 
                 foreach ($finder as $file) {
                     $build[] = array (
