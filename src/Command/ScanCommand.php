@@ -50,9 +50,8 @@ class ScanCommand extends AbstractCommand
 
         $scanner = new \ModuleScanner();
 
-        $scanner->scanManifest("$root/package/manifest.php");
-        $scanner->scanDir("$root/package");
-
+        $scanner->scanPackage("$root/package");
+        
         if ($scanner->hasIssues()) {
             $output->writeln('<error>Errors found in package:</error>');
             print_r($scanner->getIssues());
