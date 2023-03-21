@@ -72,6 +72,9 @@ class Config implements \ArrayAccess
         ),
         'installdefs' => array (
             'id' => '',
+            'pre_execute' => array (
+                '<basepath>/actions/pre_install_actions.php',
+            ),
             'post_execute' => array (
                 '<basepath>/actions/post_install_actions.php',
             ),
